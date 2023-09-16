@@ -6,8 +6,9 @@ import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
 import subscriberRoutes from "./routes/subscriberRoute.js";
-import StripeRoute from './routes/StripeRoute.js'
+import StripeRoute from "./routes/StripeRoute.js";
 import UserRouter from "./routes/userRoute.js";
+import ourstoryRoutes from "./routes/ourstoriesRoute.js";
 
 //pass : mk0dsWGiINJqz77m
 
@@ -24,8 +25,9 @@ app.use(morgan("dev"));
 
 //routes
 app.use("/api/v1/product", productRoutes);
-app.use("/api/v1/subscriber", subscriberRoutes );
-app.use("/api/v1",StripeRoute)
+app.use("/api/v1/subscriber", subscriberRoutes);
+app.use("/api/v1/ourstory", ourstoryRoutes);
+app.use("/api/v1", StripeRoute);
 app.use("/api/v1/user", UserRouter);
 
 //rest api
