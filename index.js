@@ -8,7 +8,8 @@ import cors from "cors";
 import subscriberRoutes from "./routes/subscriberRoute.js";
 import StripeRoute from "./routes/StripeRoute.js";
 import UserRouter from "./routes/userRoute.js";
-import ourstoryRoutes from "./routes/ourstoriesRoute.js";
+import ourstoryRoutes from "./routes/ourstoryRoute.js"
+
 
 //pass : mk0dsWGiINJqz77m
 

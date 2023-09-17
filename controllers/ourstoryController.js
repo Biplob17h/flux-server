@@ -1,113 +1,116 @@
 import fs from "fs";
 import slugify from "slugify";
-import ourstoriesModal from "../models/ourstories.js";
+import ourstoryModel from "../models/ourstoryModel.js";
 
 
-//create product
+
+//create story
 export const createStoryController = async (req, res) => {
   try {
-    const { title, description } = req.fields;
+    const { title, details } = req.fields;
     const { photo } = req.files;
     //Validation
     switch (true) {
       case !title:
-        return res.status(500).send({ error: "Name is Required" });
-      case !description:
-        return res.status(500).send({ error: "Price is Required" });
+        return res.status(500).send({ error: "title is Required" });
+      case !details:
+        return res.status(500).send({ error: "details is Required" });
       case photo && photo.size > 1000000:
         return res
           .status(500)
           .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const stories = new ourstoriesModal({ ...req.fields, slug: slugify(title)});
+    const story = new ourstoryModel({ ...req.fields, slug: slugify(title)});
     if (photo) {
-      stories.photo.data = fs.readFileSync(photo.path);
-      stories.photo.contentType = photo.type;
+      story.photo.data = fs.readFileSync(photo.path);
+      story.photo.contentType = photo.type;
     }
-    await stories.save();
+    await story.save();
     res.status(201).send({
       success: true,
-      message: "stories Created Successfully",
-      stories,
+      message: "story Created Successfully",
+      story,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
       error,
-      message: "Error in creatring stories",
+      message: "Error in creatring story",
     });
   }
 };
+
 
 //get all  Story
 export const getStoryController = async (req, res) => {
   try {
-    const stories = await ourstoriesModal.find({})
-      .select("-photo")
-      .sort({ createdAt: -1 });
+    const story = await ourstoryModel.find({})
+    .select("-photo")
+    .sort({createdAt: -1});
     res.status(200).send({
       success: true,
-      countTotal: stories.length,
-      message: "All stories",
-      stories,
+      countTotal : story.length,
+      message : "All Story",
+      story,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error in getting stories",
+      message: "Error in getting Story",
       error: error.message,
     });
   }
 };
 
-// //get single Product
+
+//get single Product
 export const singleStoryController = async (req, res) => {
   try {
-    const stories = await ourstoriesModal.findOne({ slug: req.params.slug })
+    const story = await ourstoryModel.findOne({ slug: req.params.slug })
       .select("-photo")
     res.status(200).send({
       success: true,
-      message: "Single stories Fetched",
-      stories,
+      message: "Single story Fetched",
+      story,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error while  getting single stories",
+      message: "Error while  getting single story",
       error: error.message,
     });
   }
 };
 
-//Story Photo Controller
-export const StoryPhotoController = async (req, res) => {
+//product Photo Controller
+export const storyPhotoController = async (req, res) => {
   try {
-    const stories = await ourstoriesModal.findById(req.params.pid).select("photo");
-    if (stories.photo.data) {
-      res.set("Content-type", stories.photo.contentType);
-      return res.status(200).send(stories.photo.data);
+    const story = await ourstoryModel.findById(req.params.pid).select("photo");
+    if (story.photo.data) {
+      res.set("Content-type", story.photo.contentType);
+      return res.status(200).send(story.photo.data);
     }
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error while  getting stories photo",
+      message: "Error while  getting story photo",
       error: error.message,
     });
   }
 };
 
-//delete Product Controller
+//delete Story Controller
 export const deleteStoryController = async (req, res) => {
   try {
-    await ourstoriesModal.findByIdAndDelete(req.params.pid).select("-photo");
+    await ourstoryModel.findByIdAndDelete(req.params.pid).select("-photo");
     res.status(200).send({
       success: true,
-      message: "stories deleted Successfully",
+      message: "Story deleted Successfully",
     });
   } catch (error) {
     console.log(error);
@@ -119,45 +122,47 @@ export const deleteStoryController = async (req, res) => {
   }
 };
 
-//update Product Controller
+//update Story Controller
 export const updateStoryController = async (req, res) => {
   try {
-    const { title, description  } =
+    const { title, details  } =
       req.fields;
     const { photo } = req.files;
     //alidation
     switch (true) {
       case !title:
-        return res.status(500).send({ error: "Title is Required" });
-      case !description:
-        return res.status(500).send({ error: "Description is Required" });
+        return res.status(500).send({ error: "title is Required" });
+      case !details:
+        return res.status(500).send({ error: "details is Required" });
       case photo && photo.size > 1000000:
         return res
           .status(500)
           .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const stories = await ourstoriesModal.findByIdAndUpdate(
+    const story = await ourstoryModel.findByIdAndUpdate(
       req.params.pid,
       { ...req.fields, slug: slugify(title) },
       { new: true }
     );
     if (photo) {
-      stories.photo.data = fs.readFileSync(photo.path);
-      stories.photo.contentType = photo.type;
+      story.photo.data = fs.readFileSync(photo.path);
+      story.photo.contentType = photo.type;
     }
-    await stories.save();
+    await story.save();
     res.status(201).send({
       success: true,
-      message: "stories Updated Successfully",
-      stories,
+      message: "Product Updated Successfully",
+      story,
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
       error,
-      message: "Error in Update stories",
+      message: "Error in Update product",
     });
   }
 };
+
+

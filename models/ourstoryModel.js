@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const storySchema = new mongoose.Schema(
+const ourstorySchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -10,7 +10,7 @@ const storySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
+    details: {
       type: String,
       required: true,
     },
@@ -22,4 +22,4 @@ const storySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Stories", storySchema);
+export default mongoose.model("OurStory", ourstorySchema);
