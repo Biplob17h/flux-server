@@ -7,6 +7,7 @@ import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
 import subscriberRoutes from "./routes/subscriberRoute.js";
 import StripeRoute from './routes/StripeRoute.js'
+import UserRouter from "./routes/userRoute.js";
 
 //pass : mk0dsWGiINJqz77m
 
@@ -25,6 +26,7 @@ app.use(morgan("dev"));
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/subscriber", subscriberRoutes );
 app.use("/api/v1",StripeRoute)
+app.use("/api/v1/user", UserRouter);
 
 //rest api
 app.get("/", (req, res) => {
