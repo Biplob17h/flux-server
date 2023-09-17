@@ -30,7 +30,7 @@ app.use("/api/v1/user", UserRouter);
 
 //rest api
 app.get("/", (req, res) => {
-  res.send(`this is a mern stack project`);
+  res.send(`<h1>Wellcome to flux server</h1>`);
 });
 
 //server run
