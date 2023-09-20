@@ -1,31 +1,29 @@
 import dotenv from "dotenv";
 dotenv.config()
 import Stripe from "stripe";
-import Order from "../models/orderModel.js";
+import FluxOrder from "../models/FluxOrderModel.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
- export const stripePayment = async (req, res) => {
+
+ export const fluxPayment = async (req, res) => {
     try {
       const customer = await stripe.customers.create({
         metadata:{
           userId:req.body.userId,
-          cart: JSON.stringify(req.body.products)
+          cart: JSON.stringify(req.body.fluxVillage)
         }
       })
-      const line_items = req.body.products.map((items) => {
+      const line_items = req.body.fluxVillage.map((items) => {
         return {
           price_data: {
             currency: "usd",
             product_data: {
-              name: items.product.name,
-              images: [items.product.img],
-              metadata:{
-                id: items._id
-              }
+              name: items.name,
+              images: [items.img]
             },
-            unit_amount: items.product.price * 100,
+            unit_amount: items.price * 100,
           },
-          quantity: items.quentity,
+          quantity: 1,
         };
       });
       const session = await stripe.checkout.sessions.create({
@@ -91,33 +89,33 @@ const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
   }
 
 
-const createOrder = async(customer, data)=>{
-  const Items = JSON.parse(customer.metadata.cart)
-
-  const newOrder = new Order({
-    userId:customer.metadata.userId,
-    customerId:data.customer,
-    paymentIntentId:data.payment_intent,
-    products: Items,
-    subtotal:data.amount_subtotal,
-    total:data.amount_total,
-    shipping:data.customer_details,
-    payment_status:data.payment_status,
-  })
-  try {
-    const savedOrder = await newOrder.save()
-    console.log("procced order",savedOrder)
-  } catch (error) {
-    console.log(error.message)
+  const createFluxOrder = async(customer, data)=>{
+    const Items = JSON.parse(customer.metadata.cart)
+  
+    const newOrder = new FluxOrder({
+      userId:customer.metadata.userId,
+      customerId:data.customer,
+      paymentIntentId:data.payment_intent,
+      fluxVillage: Items,
+      subtotal:data.amount_subtotal,
+      total:data.amount_total,
+      shipping:data.customer_details,
+      payment_status:data.payment_status,
+    })
+    try {
+      const savedOrder = await newOrder.save()
+      console.log("procced order",savedOrder)
+    } catch (error) {
+      console.log(error.message)
+    }
   }
-}
 
 
   let endpointSecret;
   // const endpointSecret = "whsec_023090e278970076a253592623e920084ce79890b46d303a769a6211b7844073";
   
   
-  export const webHook = (req, res) => {
+  export const webHookFlux = (req, res) => {
     const sig = req.headers['stripe-signature'];
   
   
@@ -144,7 +142,7 @@ const createOrder = async(customer, data)=>{
   
   if(eventType === "checkout.session.completed"){
     stripe.customers.retrieve(data.customer).then((customer)=>{
-      createOrder(customer, data)
+        createFluxOrder(customer, data)
     }).catch(err=>console.log(err.message))
   }
   
