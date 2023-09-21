@@ -9,6 +9,7 @@ import subscriberRoutes from "./routes/subscriberRoute.js";
 import StripeRoute from "./routes/StripeRoute.js";
 import UserRouter from "./routes/userRoute.js";
 import ourstoryRoutes from "./routes/ourstoryRoute.js"
+import cartRoutes from "./routes/cartRoutes.js";
 
 
 //pass : mk0dsWGiINJqz77m
@@ -30,6 +31,7 @@ app.use("/api/v1/subscriber", subscriberRoutes);
 app.use("/api/v1/ourstory", ourstoryRoutes);
 app.use("/api/v1", StripeRoute);
 app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/cart", cartRoutes);
 
 //rest api
 app.get("/", (req, res) => {
