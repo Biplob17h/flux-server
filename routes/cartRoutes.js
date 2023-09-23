@@ -5,6 +5,8 @@ import {
   getAllCart,
   updateCartQuentity,
 } from "../controllers/cartController.js";
+const app = express();
+app.use(express.json());
 const routes = express.Router();
 
 // add to cart

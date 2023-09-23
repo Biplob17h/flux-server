@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5050;
 //middleware
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json());
+
 
 //routes
 app.use("/api/v1/product", productRoutes);

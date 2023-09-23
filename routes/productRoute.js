@@ -8,6 +8,8 @@ import {
   updateProductController,
 } from "../controllers/productController.js";
 import formidable from "express-formidable";
+const app = express();
+app.use(express.json());
 
 const router = express.Router();
 

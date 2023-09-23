@@ -1,6 +1,7 @@
 import express from "express";
 import ExpressFormidable from "express-formidable";
-
+const app = express();
+app.use(express.json());
 
 import {
   createStoryController,

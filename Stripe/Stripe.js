@@ -3,6 +3,8 @@ dotenv.config()
 import Stripe from "stripe";
 import Order from "../models/orderModel.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+import express from "express";
+const app = express();
 
  export const stripePayment = async (req, res) => {
     try {
