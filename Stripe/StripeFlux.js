@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config()
 import Stripe from "stripe";
 import FluxOrder from "../models/FluxOrderModel.js";
-const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+const stripe = Stripe("sk_test_51NmhimDBfEUXxFmsDpeyp80ETnf2sfcwxJ7hlusnFlSv9M1OT63O70jrzvw3A01xRoIidGRIs5PjCmdSKUZIepYn00cIBAjSlX");
 
 
  export const fluxPayment = async (req, res) => {
@@ -111,8 +111,8 @@ const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
   }
 
 
+  // const endpointSecret = "whsec_O5DbKsvRDPMLkShRn6kObv3Gcdmo4fHO";
   let endpointSecret;
-  // const endpointSecret = "whsec_023090e278970076a253592623e920084ce79890b46d303a769a6211b7844073";
   
   
   export const webHookFlux = (req, res) => {

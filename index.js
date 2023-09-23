@@ -28,6 +28,8 @@ app.use("/api/v1/subscriber", subscriberRoutes );
 app.use("/api/v1",StripeRoute)
 app.use("/api/v1/flux", fluxStripeRoute)
 
+
+
 //rest api
 app.get("/", (req, res) => {
   res.send(`this is a mern stack project`);
