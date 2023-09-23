@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const flux = new mongoose.Schema(
+const fluxVillage = new mongoose.Schema(
   {
-    userId: { type: String, require: true },
+    userEmail: { type: String, require: true },
     customerId: { type: String},
     paymentIntentId: { type: String},
     fluxVillage: [
@@ -21,6 +21,6 @@ const flux = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const FluxOrder = mongoose.model("FluxOrder", flux)
+const FluxVillageOrder = mongoose.model("FluxVillageOrder", fluxVillage)
 
-export default FluxOrder;
+export default FluxVillageOrder;

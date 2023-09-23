@@ -1,30 +1,31 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
-import FluxOrder from "../models/FluxOrderModel.js";
+import Order from "../models/orderModel.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
-import express from "express";
-const app = express();
 
-export const fluxPayment = async (req, res) => {
+export const Store = async (req, res) => {
   try {
     const customer = await stripe.customers.create({
       metadata: {
-        userId: req.body.userId,
-        cart: JSON.stringify(req.body.fluxVillage),
+        userEmail: req.body.userEmail,
+        cart: JSON.stringify(req.body.products),
       },
     });
-    const line_items = req.body.fluxVillage.map((items) => {
+    const line_items = req.body.products.map((items) => {
       return {
         price_data: {
           currency: "usd",
           product_data: {
-            name: items.name,
-            images: [items.img],
+            name: items.product.name,
+            images: [items.product.img],
+            metadata: {
+              id: items._id,
+            },
           },
-          unit_amount: items.price * 100,
+          unit_amount: items.product.price * 100,
         },
-        quantity: 1,
+        quantity: items.quentity,
       };
     });
     const session = await stripe.checkout.sessions.create({
@@ -89,10 +90,31 @@ export const fluxPayment = async (req, res) => {
   }
 };
 
-const endpointSecret = "whsec_023090e278970076a253592623e920084ce79890b46d303a769a6211b7844073";
-// let endpointSecret;
 
-export const webHookFlux = (req, res) => {
+// product order db
+const createOrder = async (customer, data) => {
+    const Items = JSON.parse(customer.metadata.cart);
+  
+    const newOrder = new Order({
+      userEmail: customer.metadata.userEmail,
+      customerId: data.customer,
+      paymentIntentId: data.payment_intent,
+      products: Items,
+      subtotal: data.amount_subtotal,
+      total: data.amount_total,
+      shipping: data.customer_details,
+      payment_status: data.payment_status,
+    });
+    try {
+      const savedOrder = await newOrder.save();
+      console.log("procced order", savedOrder);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+let endpointSecret;
+
+export const webHookStore = (req, res) => {
   const sig = req.headers["stripe-signature"];
 
   let data;
@@ -120,7 +142,7 @@ export const webHookFlux = (req, res) => {
     stripe.customers
       .retrieve(data.customer)
       .then((customer) => {
-        createFluxOrder(customer, data);
+        createOrder(customer, data);
       })
       .catch((err) => console.log(err.message));
   }
@@ -129,25 +151,3 @@ export const webHookFlux = (req, res) => {
   res.send().end();
 };
 
-app.use(express.json());
-
-const createFluxOrder = async (customer, data) => {
-  const Items = JSON.parse(customer.metadata.cart);
-
-  const newOrder = new FluxOrder({
-    userId: customer.metadata.userId,
-    customerId: data.customer,
-    paymentIntentId: data.payment_intent,
-    fluxVillage: Items,
-    subtotal: data.amount_subtotal,
-    total: data.amount_total,
-    shipping: data.customer_details,
-    payment_status: data.payment_status,
-  });
-  try {
-    const savedOrder = await newOrder.save();
-    console.log("procced order", savedOrder);
-  } catch (error) {
-    console.log(error.message);
-  }
-};

@@ -6,14 +6,16 @@ import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoute.js";
 import cors from "cors";
 import subscriberRoutes from "./routes/subscriberRoute.js";
-import StripeRoute from "./routes/StripeRoute.js";
-import fluxStripeRoute from "./routes/fluxStripeRoute.js";
+import freedom from "./routes/freedomRoute.js";
+import village from "./routes/villageRoute.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import ourstoryRoutes from "./routes/ourstoryRoute.js";
+import store from "./routes/storeRoute.js";
 
 //pass : mk0dsWGiINJqz77m
 
 const app = express();
+app.use(express.json());
 
 //config env
 dotenv.config();
@@ -27,8 +29,9 @@ app.use(morgan("dev"));
 //routes
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/subscriber", subscriberRoutes );
-app.use("/api/v1",StripeRoute)
-app.use("/api/v1/flux", fluxStripeRoute)
+app.use("/api/v1/freedom",freedom)
+app.use("/api/v1/village", village)
+app.use("/api/v1/store", store)
 // app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/ourstory", ourstoryRoutes);

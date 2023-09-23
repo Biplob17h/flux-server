@@ -1,7 +1,6 @@
 import express from "express";
 import { createNewUser } from "../controllers/userController.js";
-const app = express();
-app.use(express.json());
+import express from "express";
 
 const router = express.Router();
 

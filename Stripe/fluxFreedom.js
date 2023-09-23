@@ -1,20 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config()
 import Stripe from "stripe";
-import Order from "../models/orderModel.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
-import express from "express";
-const app = express();
+import FluxFreedomOrder from "../models/fluxFreedomOrder.js";
 
- export const stripePayment = async (req, res) => {
+ export const freedom = async (req, res) => {
     try {
       const customer = await stripe.customers.create({
         metadata:{
-          userId:req.body.userId,
-          cart: JSON.stringify(req.body.products)
+          userEmail:req.body.userEmail,
+          cart: JSON.stringify(req.body.freedom)
         }
       })
-      const line_items = req.body.products.map((items) => {
+      const line_items = req.body.freedom.map((items) => {
         return {
           price_data: {
             currency: "usd",
@@ -92,34 +90,31 @@ const app = express();
     }
   }
 
-
-const createOrder = async(customer, data)=>{
-  const Items = JSON.parse(customer.metadata.cart)
-
-  const newOrder = new Order({
-    userId:customer.metadata.userId,
-    customerId:data.customer,
-    paymentIntentId:data.payment_intent,
-    products: Items,
-    subtotal:data.amount_subtotal,
-    total:data.amount_total,
-    shipping:data.customer_details,
-    payment_status:data.payment_status,
-  })
-  try {
-    const savedOrder = await newOrder.save()
-    console.log("procced order",savedOrder)
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-
+  const createFluxOrder = async (customer, data) => {
+    const Items = JSON.parse(customer.metadata.cart);
+  
+    const newOrder = new FluxFreedomOrder({
+      userEmail: customer.metadata.userEmail,
+      customerId: data.customer,
+      paymentIntentId: data.payment_intent,
+      fluxFreedom: Items,
+      subtotal: data.amount_subtotal,
+      total: data.amount_total,
+      shipping: data.customer_details,
+      payment_status: data.payment_status,
+    });
+    try {
+      const savedOrder = await newOrder.save();
+      console.log("procced order", savedOrder);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   let endpointSecret;
-  // const endpointSecret = "whsec_023090e278970076a253592623e920084ce79890b46d303a769a6211b7844073";
   
   
-  export const webHook = (req, res) => {
+  export const webHookFreedom = (req, res) => {
     const sig = req.headers['stripe-signature'];
   
   
@@ -146,10 +141,13 @@ const createOrder = async(customer, data)=>{
   
   if(eventType === "checkout.session.completed"){
     stripe.customers.retrieve(data.customer).then((customer)=>{
-      createOrder(customer, data)
+      createFluxOrder(customer, data)
     }).catch(err=>console.log(err.message))
   }
   
     // Return a 200 res to acknowledge receipt of the event
     res.send().end();
   }
+
+
+
