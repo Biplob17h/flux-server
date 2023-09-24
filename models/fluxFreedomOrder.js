@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema(
+const fluxFreedom = new mongoose.Schema(
   {
     userEmail: { type: String, require: true },
     customerId: { type: String},
     paymentIntentId: { type: String},
-    products: [
+    fluxFreedom: [
       {
-        id: { type: String },
-        quentity: { type: Number },
-        product: { type: Object, require: true },
+        quantity: { type: Number },
+        name:{type:String},
+        price:{type:Number},
+        img:{type:String}
       },
     ],
     subtotal: { type: Number, require: true },
@@ -20,7 +21,6 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+const FluxFreedomOrder = mongoose.model("FluxFreedomOrder", fluxFreedom)
 
-const Order = mongoose.model("Order", orderSchema)
-
-export default Order;
+export default FluxFreedomOrder;
