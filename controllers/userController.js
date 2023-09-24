@@ -5,6 +5,7 @@ export const createNewUser = async (req, res) => {
     const user = new User(req.body);
     const result = await user.save();
 
+    
     res.json({
       stauts: "success",
       result,
