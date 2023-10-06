@@ -1,5 +1,5 @@
 {
-  "name": "dokan-api",
+  "name": "flux-car-server",
   "version": "1.0.0",
   "description": "ecommerce rest api",
   "main": "server.js",

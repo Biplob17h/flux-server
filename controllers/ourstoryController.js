@@ -7,12 +7,14 @@ import ourstoryModel from "../models/ourstoryModel.js";
 //create story
 export const createStoryController = async (req, res) => {
   try {
-    const { title, details } = req.fields;
+    const { title, details, subtitle } = req.fields;
     const { photo } = req.files;
     //Validation
     switch (true) {
       case !title:
         return res.status(500).send({ error: "title is Required" });
+        case !subtitle:
+        return res.status(500).send({ error: "subtitle is Required" });
       case !details:
         return res.status(500).send({ error: "details is Required" });
       case photo && photo.size > 1000000:
@@ -125,13 +127,15 @@ export const deleteStoryController = async (req, res) => {
 //update Story Controller
 export const updateStoryController = async (req, res) => {
   try {
-    const { title, details  } =
+    const { title, details, subtitle  } =
       req.fields;
     const { photo } = req.files;
-    //alidation
+    //Validation
     switch (true) {
       case !title:
         return res.status(500).send({ error: "title is Required" });
+        case !subtitle:
+        return res.status(500).send({ error: "subtitle is Required" });
       case !details:
         return res.status(500).send({ error: "details is Required" });
       case photo && photo.size > 1000000:
