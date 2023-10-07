@@ -13,7 +13,6 @@ import ourstoryRoutes from "./routes/ourstoryRoute.js";
 import UserRouter from "./routes/userRoute.js";
 import store from "./routes/storeRoute.js";
 
-
 //pass : mk0dsWGiINJqz77m
 
 const app = express();
@@ -27,24 +26,21 @@ const PORT = process.env.PORT || 5050;
 app.use(cors());
 app.use(morgan("dev"));
 
-
 //routes
 app.use("/api/v1/product", productRoutes);
-app.use("/api/v1/freedom",freedom)
-app.use("/api/v1/village", village)
-app.use("/api/v1/store", store)
+app.use("/api/v1/freedom", freedom);
+app.use("/api/v1/village", village);
+app.use("/api/v1/store", store);
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/ourstory", ourstoryRoutes);
-
 
 app.use("/api/v1/adminphoto", adminphotoRouter);
 
 //rest api
 app.get("/", (req, res) => {
-  res.send(`this is a mern stack project`);
+  res.send(`Flux Car Server Is Running`);
 });
-
 
 //server run
 app.listen(PORT, () => {
