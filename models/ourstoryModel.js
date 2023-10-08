@@ -18,6 +18,10 @@ const ourstorySchema = new mongoose.Schema(
       data: Buffer,
       contentType: String,
     },
+    subtitle: {
+      type: String,
+      required : true,
+    },
   },
   { timestamps: true }
 );
