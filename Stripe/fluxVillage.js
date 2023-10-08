@@ -146,4 +146,22 @@ export const webHookFlux = (req, res) => {
 };
 
 
-
+// export const getVillageOrders = async (req, res) => {
+//   try {
+//     const email = req.query.Email;
+//     const query = {
+//       userEmail: email,
+//     };
+//     const cartData = await FluxVillageOrder.find(query);
+//     res.send({
+//       res: "success",
+//       cartData,
+//     });
+//   } catch (error) {
+//     res.send({
+//       success: false,
+//       error,
+//       message: "Error in get all cart",
+//     });
+//   }
+// };

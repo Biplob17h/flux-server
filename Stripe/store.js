@@ -95,7 +95,7 @@ export const Store = async (req, res) => {
 const createOrder = async (customer, data) => {
     const Items = JSON.parse(customer.metadata.cart);
   
-    const newOrder = new Order({
+    const newOrder = new FluxOrders({
       userEmail: customer.metadata.userEmail,
       customerId: data.customer,
       paymentIntentId: data.payment_intent,
@@ -151,3 +151,22 @@ export const webHookStore = (req, res) => {
   res.send().end();
 };
 
+// export const getFreedomProductOrders = async (req, res) => {
+//   try {
+//     const email = req.query.userEmail;
+//     const query = {
+//       userEmail: email,
+//     };
+//     const cartData = await FluxOrders.find(query);
+//     res.send({
+//       res: "success",
+//       cartData,
+//     });
+//   } catch (error) {
+//     res.send({
+//       success: false,
+//       error,
+//       message: "Error in get all cart",
+//     });
+//   }
+// };
