@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
-import Order from "../models/orderModel.js";
+import FluxOrder from "../models/fluxOrderModel.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 export const Store = async (req, res) => {
@@ -18,7 +18,6 @@ export const Store = async (req, res) => {
           currency: "usd",
           product_data: {
             name: items.product.name,
-            images: [items.product.img],
             metadata: {
               id: items._id,
             },
@@ -81,7 +80,7 @@ export const Store = async (req, res) => {
       },
       mode: "payment",
       success_url: `${process.env.SUCCESS_URL}`,
-      cancel_url: `${process.env.CANCEL_URL}`,
+      cancel_url: `${process.env.STORE_CANCEL_URL}`,
     });
 
     res.json({ url: session.url });
@@ -95,7 +94,7 @@ export const Store = async (req, res) => {
 const createOrder = async (customer, data) => {
     const Items = JSON.parse(customer.metadata.cart);
   
-    const newOrder = new FluxOrders({
+    const newOrder = new FluxOrder({
       userEmail: customer.metadata.userEmail,
       customerId: data.customer,
       paymentIntentId: data.payment_intent,
@@ -157,7 +156,7 @@ export const webHookStore = (req, res) => {
 //     const query = {
 //       userEmail: email,
 //     };
-//     const cartData = await FluxOrders.find(query);
+//     const cartData = await FluxOrder.find(query);
 //     res.send({
 //       res: "success",
 //       cartData,

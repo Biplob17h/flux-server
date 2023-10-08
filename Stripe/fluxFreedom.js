@@ -78,7 +78,7 @@ export const freedom = async (req, res) => {
       },
       mode: "payment",
       success_url: `${process.env.SUCCESS_URL}`,
-      cancel_url: `${process.env.CANCEL_URL}`,
+      cancel_url: `${process.env.FREEDOM_CANCEL_URL}`,
     });
 
     res.json({ url: session.url });
