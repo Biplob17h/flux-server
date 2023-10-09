@@ -7,7 +7,6 @@ const orderSchema = new mongoose.Schema(
     paymentIntentId: { type: String},
     products: [
       {
-        id: { type: String },
         quentity: { type: Number },
         product: { type: Object, require: true },
       },
@@ -21,6 +20,6 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Order = mongoose.model("Order", orderSchema)
+const FluxOrder = mongoose.model("FluxOrder", orderSchema)
 
-export default Order;
+export default FluxOrder;
