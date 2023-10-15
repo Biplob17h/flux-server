@@ -8,7 +8,7 @@ export const freedom = async (req, res) => {
   try {
     const customer = await stripe.customers.create({
       metadata: {
-        userEmail: req.body.userEmail,
+        userEmail: req.body.freedomEmail,
         cart: JSON.stringify(req.body.fluxFreedom),
       },
     });
@@ -94,8 +94,8 @@ const createFluxOrder = async (customer, data) => {
     customerId: data.customer,
     paymentIntentId: data.payment_intent,
     fluxFreedom: Items,
-    subtotal: data.amount_subtotal,
-    total: data.amount_total,
+    subtotal: data.amount_subtotal / 100,
+    total: data.amount_total / 100,
     shipping: data.customer_details,
     payment_status: data.payment_status,
   });
@@ -148,7 +148,7 @@ export const webHookFreedom = (req, res) => {
 
 export const getFreedomOrders = async (req, res) => {
   try {
-    const email = req.query.userEmail;
+    const email = req.query.freedomEmail;
     const query = {
       userEmail: email,
     };

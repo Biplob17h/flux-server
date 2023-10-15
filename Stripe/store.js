@@ -8,8 +8,8 @@ export const Store = async (req, res) => {
   try {
     const customer = await stripe.customers.create({
       metadata: {
-        userEmail: req.body.userEmail,
-        cart: JSON.stringify(req.body.products),
+        userEmail: req.body.productEmail,
+        cart: JSON.stringify(req.body.products)
       },
     });
     const line_items = req.body.products.map((items) => {
@@ -99,8 +99,8 @@ const createOrder = async (customer, data) => {
       customerId: data.customer,
       paymentIntentId: data.payment_intent,
       products: Items,
-      subtotal: data.amount_subtotal,
-      total: data.amount_total,
+      subtotal: data.amount_subtotal / 100,
+      total: data.amount_total / 100,
       shipping: data.customer_details,
       payment_status: data.payment_status,
     });
@@ -150,22 +150,22 @@ export const webHookStore = (req, res) => {
   res.send().end();
 };
 
-// export const getFreedomProductOrders = async (req, res) => {
-//   try {
-//     const email = req.query.userEmail;
-//     const query = {
-//       userEmail: email,
-//     };
-//     const cartData = await FluxOrder.find(query);
-//     res.send({
-//       res: "success",
-//       cartData,
-//     });
-//   } catch (error) {
-//     res.send({
-//       success: false,
-//       error,
-//       message: "Error in get all cart",
-//     });
-//   }
-// };
+export const ProductOrders = async (req, res) => {
+  try {
+    const email = req.query.productEmail;
+    const query = {
+      userEmail: email,
+    };
+    const cartData = await FluxOrder.find(query);
+    res.send({
+      res: "success",
+      cartData,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error,
+      message: "Error in get all cart",
+    });
+  }
+};

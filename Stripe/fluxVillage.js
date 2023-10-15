@@ -8,7 +8,7 @@ export const village = async (req, res) => {
   try {
     const customer = await stripe.customers.create({
       metadata: {
-        userEmail: req.body.userEmail,
+        userEmail: req.body.villageEmail,
         cart: JSON.stringify(req.body.fluxVillage),
       },
     });
@@ -94,8 +94,8 @@ const createFluxOrder = async (customer, data) => {
     customerId: data.customer,
     paymentIntentId: data.payment_intent,
     fluxVillage: Items,
-    subtotal: data.amount_subtotal,
-    total: data.amount_total,
+    subtotal: data.amount_subtotal / 100,
+    total: data.amount_total / 100,
     shipping: data.customer_details,
     payment_status: data.payment_status,
   });
@@ -146,22 +146,22 @@ export const webHookFlux = (req, res) => {
 };
 
 
-// export const getVillageOrders = async (req, res) => {
-//   try {
-//     const email = req.query.Email;
-//     const query = {
-//       userEmail: email,
-//     };
-//     const cartData = await FluxVillageOrder.find(query);
-//     res.send({
-//       res: "success",
-//       cartData,
-//     });
-//   } catch (error) {
-//     res.send({
-//       success: false,
-//       error,
-//       message: "Error in get all cart",
-//     });
-//   }
-// };
+export const getVillageOrders = async (req, res) => {
+  try {
+    const email = req.query.Email;
+    const query = {
+      userEmail: email,
+    };
+    const cartData = await FluxVillageOrder.find(query);
+    res.send({
+      res: "success",
+      cartData,
+    });
+  } catch (error) {
+    res.send({
+      success: false,
+      error,
+      message: "Error in get all cart",
+    });
+  }
+};
