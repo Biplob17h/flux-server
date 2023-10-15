@@ -28,15 +28,9 @@ app.use(morgan("dev"));
 
 //routes
 app.use("/api/v1/product", productRoutes);
-<<<<<<< HEAD
 app.use("/api/v1/freedom", freedom);
 app.use("/api/v1/village", village);
 app.use("/api/v1/store", store);
-=======
-app.use("/api/v1/store", store);
-app.use("/api/v1/freedom",freedom);
-app.use("/api/v1/village", village);
->>>>>>> a40314ff49b5753d7923bfdd1d12e8091267ff21
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/ourstory", ourstoryRoutes);
