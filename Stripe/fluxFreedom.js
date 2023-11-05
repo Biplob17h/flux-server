@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
-import FluxFreedomOrder from "../models/fluxFreedomOrder.js";
+import AllOrder from "../models/allOrders.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 export const freedom = async (req, res) => {
@@ -89,11 +89,11 @@ export const freedom = async (req, res) => {
 const createFluxOrder = async (customer, data) => {
   const Items = JSON.parse(customer.metadata.cart);
 
-  const newOrder = new FluxFreedomOrder({
+  const newOrder = new AllOrder({
     userEmail: customer.metadata.userEmail,
     customerId: data.customer,
     paymentIntentId: data.payment_intent,
-    fluxFreedom: Items,
+    product: Items,
     subtotal: data.amount_subtotal / 100,
     total: data.amount_total / 100,
     shipping: data.customer_details,
@@ -152,7 +152,7 @@ export const getFreedomOrders = async (req, res) => {
     const query = {
       userEmail: email,
     };
-    const cartData = await FluxFreedomOrder.find(query);
+    const cartData = await AllOrder.find(query);
     res.send({
       res: "success",
       cartData,

@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
-import FluxOrder from "../models/fluxOrderModel.js";
+import AllOrder from "../models/allOrders.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
 
 export const Store = async (req, res) => {
@@ -9,22 +9,20 @@ export const Store = async (req, res) => {
     const customer = await stripe.customers.create({
       metadata: {
         userEmail: req.body.productEmail,
-        cart: JSON.stringify(req.body.products)
+        cart: JSON.stringify(req.body.product)
       },
     });
-    const line_items = req.body.products.map((items) => {
+    const line_items = req.body.product.map((items) => {
       return {
         price_data: {
           currency: "usd",
           product_data: {
-            name: items.product.name,
-            metadata: {
-              id: items._id,
-            },
+            name: items.name,
+            images: [items.image]
           },
-          unit_amount: items.product.price * 100,
+          unit_amount: items.price * 100,
         },
-        quantity: items.quentity,
+        quantity: items.quantity,
       };
     });
     const session = await stripe.checkout.sessions.create({
@@ -82,7 +80,7 @@ export const Store = async (req, res) => {
       success_url: `${process.env.SUCCESS_URL}`,
       cancel_url: `${process.env.STORE_CANCEL_URL}`,
     });
-
+console.log(line_items)
     res.json({ url: session.url });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -94,11 +92,11 @@ export const Store = async (req, res) => {
 const createOrder = async (customer, data) => {
     const Items = JSON.parse(customer.metadata.cart);
   
-    const newOrder = new FluxOrder({
+    const newOrder = new AllOrder({
       userEmail: customer.metadata.userEmail,
       customerId: data.customer,
       paymentIntentId: data.payment_intent,
-      products: Items,
+      product: Items,
       subtotal: data.amount_subtotal / 100,
       total: data.amount_total / 100,
       shipping: data.customer_details,
@@ -156,7 +154,7 @@ export const ProductOrders = async (req, res) => {
     const query = {
       userEmail: email,
     };
-    const cartData = await FluxOrder.find(query);
+    const cartData = await AllOrder.find(query);
     res.send({
       res: "success",
       cartData,

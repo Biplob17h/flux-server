@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
-import FluxVillageOrder from "../models/fluxVillageOrder.js";
+import AllOrder from "../models/allOrders.js";
 
 export const village = async (req, res) => {
   try {
@@ -89,11 +89,11 @@ export const village = async (req, res) => {
 const createFluxOrder = async (customer, data) => {
   const Items = JSON.parse(customer.metadata.cart);
 
-  const newOrder = new FluxVillageOrder({
+  const newOrder = new AllOrder({
     userEmail: customer.metadata.userEmail,
     customerId: data.customer,
     paymentIntentId: data.payment_intent,
-    fluxVillage: Items,
+    product: Items,
     subtotal: data.amount_subtotal / 100,
     total: data.amount_total / 100,
     shipping: data.customer_details,
@@ -106,7 +106,7 @@ const createFluxOrder = async (customer, data) => {
     console.log(error.message);
   }
 };
-let endpointSecret;
+let endpointSecret = "whsec_4e481bf59841e6418b74a138c6dfaf838ad2c9cb96c19d35364be0f1fea0d56c";
 
 export const webHookFlux = (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -146,13 +146,13 @@ export const webHookFlux = (req, res) => {
 };
 
 
-export const getVillageOrders = async (req, res) => {
+export const getAllOrder = async (req, res) => {
   try {
     const email = req.query.Email;
     const query = {
       userEmail: email,
     };
-    const cartData = await FluxVillageOrder.find(query);
+    const cartData = await AllOrder.find(query);
     res.send({
       res: "success",
       cartData,
