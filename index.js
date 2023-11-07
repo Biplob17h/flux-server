@@ -103,7 +103,6 @@ const PORT = process.env.PORT || 5050;
 app.use(cors());
 app.use(morgan("dev"));
 
-
 //routes
 app.use("/api/v1/product", productRoutes);
 app.use("/api/v1/user", UserRouter);
@@ -121,9 +120,8 @@ app.use("/api/v1/adminphoto", adminphotoRouter);
 
 //rest api
 app.get("/", (req, res) => {
-  res.send(`this is a mern stack project`);
+  res.send(`Flux Car Server Is Running`);
 });
-
 
 //server run
 app.listen(PORT, () => {
