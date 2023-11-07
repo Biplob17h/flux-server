@@ -106,44 +106,44 @@ const createFluxOrder = async (customer, data) => {
     console.log(error.message);
   }
 };
-let endpointSecret;
+// let endpointSecret="whsec_z65ayMgdFgEcc6bnba4h5G4ch990sDOY";
 
-export const webHookFreedom = (req, res) => {
-  const sig = req.headers["stripe-signature"];
+// export const webHookFreedom = (req, res) => {
+//   const sig = req.headers["stripe-signature"];
 
-  let data;
-  let eventType;
+//   let data;
+//   let eventType;
 
-  if (endpointSecret) {
-    let event;
+//   if (endpointSecret) {
+//     let event;
 
-    try {
-      event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-      console.log("webhook verified");
-    } catch (err) {
-      console.log(`Webhook Error: ${err.message}`);
-      res.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
-    data = event.data.object;
-    eventType = event.type;
-  } else {
-    data = req.body.data.object;
-    eventType = req.body.type;
-  }
+//     try {
+//       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+//       console.log("webhook verified");
+//     } catch (err) {
+//       console.log(`Webhook Error: ${err.message}`);
+//       res.status(400).send(`Webhook Error: ${err.message}`);
+//       return;
+//     }
+//     data = event.data.object;
+//     eventType = event.type;
+//   } else {
+//     data = req.body.data.object;
+//     eventType = req.body.type;
+//   }
 
-  if (eventType === "checkout.session.completed") {
-    stripe.customers
-      .retrieve(data.customer)
-      .then((customer) => {
-        createFluxOrder(customer, data);
-      })
-      .catch((err) => console.log(err.message));
-  }
+//   if (eventType === "checkout.session.completed") {
+//     stripe.customers
+//       .retrieve(data.customer)
+//       .then((customer) => {
+//         createFluxOrder(customer, data);
+//       })
+//       .catch((err) => console.log(err.message));
+//   }
 
-  // Return a 200 res to acknowledge receipt of the event
-  res.send().end();
-};
+//   // Return a 200 res to acknowledge receipt of the event
+//   res.send().end();
+// };
 
 
 export const getFreedomOrders = async (req, res) => {

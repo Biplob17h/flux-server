@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 const allOrder = new mongoose.Schema(
   {
     userEmail: { type: String, require: true },
-    customerId: { type: String},
-    paymentIntentId: { type: String},
+    customerId: { type: String },
+    paymentIntentId: { type: String },
     product: [
       {
         quantity: { type: Number },
-        name:{type:String},
-        price:{type:Number},
-        img:{type:String}
+        name: { type: String },
+        price: { type: Number },
+        img: { type: String },
       },
     ],
     subtotal: { type: Number, require: true },
@@ -21,6 +21,6 @@ const allOrder = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const AllOrder = mongoose.model("AllOrder", allOrder)
+const AllOrder = mongoose.model("AllOrder", allOrder);
 
 export default AllOrder;

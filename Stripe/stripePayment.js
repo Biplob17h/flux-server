@@ -1,28 +1,28 @@
 import dotenv from "dotenv";
 dotenv.config();
 import Stripe from "stripe";
-import AllOrder from "../models/allOrders.js";
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY);
+import AllOrder from "../models/allOrders.js";
 
-export const Store = async (req, res) => {
+export const StripePayment = async (req, res) => {
   try {
     const customer = await stripe.customers.create({
       metadata: {
-        userEmail: req.body.productEmail,
-        cart: JSON.stringify(req.body.product)
+        userEmail: req.body.Email,
+        cart: JSON.stringify(req.body.FluxData),
       },
     });
-    const line_items = req.body.product.map((items) => {
+    const line_items = req.body.FluxData.map((items) => {
       return {
         price_data: {
           currency: "usd",
           product_data: {
             name: items.name,
-            images: [items.image]
+            images: [items.img],
           },
           unit_amount: items.price * 100,
         },
-        quantity: items.quantity,
+        quantity: 1,
       };
     });
     const session = await stripe.checkout.sessions.create({
@@ -78,9 +78,9 @@ export const Store = async (req, res) => {
       },
       mode: "payment",
       success_url: `${process.env.SUCCESS_URL}`,
-      cancel_url: `${process.env.STORE_CANCEL_URL}`,
+      cancel_url: `${process.env.VILLAGE_CANCEL_URL}`,
     });
-console.log(line_items)
+
     res.json({ url: session.url });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -88,69 +88,9 @@ console.log(line_items)
 };
 
 
-// product order db
-const createOrder = async (customer, data) => {
-    const Items = JSON.parse(customer.metadata.cart);
-  
-    const newOrder = new AllOrder({
-      userEmail: customer.metadata.userEmail,
-      customerId: data.customer,
-      paymentIntentId: data.payment_intent,
-      product: Items,
-      subtotal: data.amount_subtotal / 100,
-      total: data.amount_total / 100,
-      shipping: data.customer_details,
-      payment_status: data.payment_status,
-    });
-    try {
-      const savedOrder = await newOrder.save();
-      console.log("procced order", savedOrder);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-// let endpointSecret="whsec_JZn8grhSUA1Y5lIUGkqnwGKAR23Hj0k8";
-
-// export const webHookStore = (req, res) => {
-//   const sig = req.headers["stripe-signature"];
-
-//   let data;
-//   let eventType;
-
-//   if (endpointSecret) {
-//     let event;
-
-//     try {
-//       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-//       console.log("webhook verified");
-//     } catch (err) {
-//       console.log(`Webhook Error: ${err.message}`);
-//       res.status(400).send(`Webhook Error: ${err.message}`);
-//       return;
-//     }
-//     data = event.data.object;
-//     eventType = event.type;
-//   } else {
-//     data = req.body.data.object;
-//     eventType = req.body.type;
-//   }
-
-//   if (eventType === "checkout.session.completed") {
-//     stripe.customers
-//       .retrieve(data.customer)
-//       .then((customer) => {
-//         createOrder(customer, data);
-//       })
-//       .catch((err) => console.log(err.message));
-//   }
-
-//   // Return a 200 res to acknowledge receipt of the event
-//   res.send().end();
-// };
-
-export const ProductOrders = async (req, res) => {
+export const getAllOrder = async (req, res) => {
   try {
-    const email = req.query.productEmail;
+    const email = req.query.Email;
     const query = {
       userEmail: email,
     };
